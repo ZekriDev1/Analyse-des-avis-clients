@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getModelsComparison } from '../services/api';
+import ModelComparisonChart from '../components/ModelComparisonChart.jsx';
+import ConfusionMatrix from '../components/ConfusionMatrix.jsx';
+import useScrollReveal from '../hooks/useScrollReveal.js';
 
 function ComparisonML() {
   const [models, setModels] = useState([]);
@@ -64,77 +67,106 @@ function ComparisonML() {
     return labels[key] || key;
   };
 
+  const [headerRef, headerVis] = useScrollReveal();
+  const [chartRef, chartVis] = useScrollReveal();
+  const [tableRef, tableVis] = useScrollReveal();
+  const [bestRef, bestVis] = useScrollReveal();
+  const [cmRef, cmVis] = useScrollReveal();
+
   return (
-    <div className="max-w-3xl mx-auto space-y-10">
+    <div style={{ maxWidth: 900, margin: '0 auto' }}>
       {/* Header */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900 tracking-tight m-0">
-          Comparaison des modèles
-        </h1>
-        <p className="mt-3 text-base leading-relaxed text-gray-500 m-0">
+      <div ref={headerRef} className={`page-card scroll-reveal ${headerVis ? 'visible' : ''}`}>
+        <h1 className="page-title">Comparaison des modèles</h1>
+        <p className="page-text">
           Cette comparaison permet de choisir le modèle le plus performant pour
           l'analyse automatique des sentiments.
         </p>
       </div>
 
+      {/* Grouped Bar Chart */}
+      {models.length > 0 && (
+        <div ref={chartRef} className={`scroll-reveal scroll-reveal-delay-1 ${chartVis ? 'visible' : ''}`} style={{ marginTop: 20 }}>
+          <div className="page-card">
+            <h2 className="section-title">Performance par métrique</h2>
+            <ModelComparisonChart models={models} />
+          </div>
+        </div>
+      )}
+
       {/* Table */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <table className="w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b border-gray-100">
-              <th className="py-4 px-5 text-left font-medium text-gray-900">
-                Modèle
-              </th>
-              {['accuracy', 'precision', 'recall', 'f1Score'].map((key) => (
-                <th
-                  key={key}
-                  className="py-4 px-5 text-left font-medium text-gray-400 font-normal"
-                >
-                  {metricLabel(key)}
+      <div ref={tableRef} className={`scroll-reveal scroll-reveal-delay-2 ${tableVis ? 'visible' : ''}`} style={{ marginTop: 20 }}>
+        <div className="page-card" style={{ padding: 0 }}>
+          <table className="w-full border-collapse text-sm" style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #e5e7eb' }}>
+                <th style={{ padding: '14px 20px', textAlign: 'left', fontWeight: 600, color: '#111827' }}>
+                  Modèle
                 </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {models.map((m, i) => (
-              <tr
-                key={m.model}
-                className={`border-b border-gray-50 ${
-                  m === bestModel ? 'bg-gray-50/60' : ''
-                }`}
-              >
-                <td className="py-4 px-5 font-medium text-gray-900">
-                  {m.model}
-                  {m === bestModel && (
-                    <span className="ml-2 text-[11px] uppercase tracking-wider text-gray-400 font-normal">
-                      Meilleur
-                    </span>
-                  )}
-                </td>
                 {['accuracy', 'precision', 'recall', 'f1Score'].map((key) => (
-                  <td key={key} className="py-4 px-5 text-gray-600 tabular-nums">
-                    {(m[key] * 100).toFixed(0)}%
-                  </td>
+                  <th
+                    key={key}
+                    style={{ padding: '14px 20px', textAlign: 'left', fontWeight: 400, color: '#6b7280' }}
+                  >
+                    {metricLabel(key)}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {models.map((m, i) => (
+                <tr
+                  key={m.model}
+                  style={{
+                    borderBottom: i < models.length - 1 ? '1px solid #f3f4f6' : 'none',
+                    background: m === bestModel ? '#f9fafb' : 'transparent',
+                  }}
+                >
+                  <td style={{ padding: '14px 20px', fontWeight: 600, color: '#111827' }}>
+                    {m.model}
+                    {m === bestModel && (
+                      <span style={{ marginLeft: 8, fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.03em', color: '#6b7280', fontWeight: 400 }}>
+                        Meilleur
+                      </span>
+                    )}
+                  </td>
+                  {['accuracy', 'precision', 'recall', 'f1Score'].map((key) => (
+                    <td key={key} style={{ padding: '14px 20px', color: '#4b5563' }}>
+                      {(m[key] * 100).toFixed(0)}%
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Best model card */}
       {bestModel && (
-        <div className="bg-white border border-gray-200 rounded-xl px-6 py-5">
-          <p className="text-sm text-gray-500 m-0">
-            <span className="font-medium text-gray-900">Meilleur modèle :</span>{' '}
-            {bestModel.model}
-            <span className="text-gray-400">
-              {' '}— F1-Score le plus élevé ({' '}
-              {(bestModel.f1Score * 100).toFixed(0)}% )
-            </span>
-          </p>
+        <div ref={bestRef} className={`scroll-reveal scroll-reveal-delay-3 ${bestVis ? 'visible' : ''}`} style={{ marginTop: 20 }}>
+          <div className="page-card">
+            <p style={{ margin: 0, fontSize: 14, color: '#4b5563' }}>
+              <strong style={{ color: '#111827' }}>Meilleur modèle :</strong>{' '}
+              {bestModel.model}
+              <span style={{ color: '#9ca3af' }}>
+                {' '}— F1-Score le plus élevé ({ (bestModel.f1Score * 100).toFixed(0)}% )
+              </span>
+            </p>
+          </div>
         </div>
       )}
+
+      {/* Confusion Matrix */}
+      <div ref={cmRef} className={`scroll-reveal scroll-reveal-delay-4 ${cmVis ? 'visible' : ''}`} style={{ marginTop: 20 }}>
+        <div className="page-card">
+          <h2 className="section-title">Matrice de confusion</h2>
+          <p className="page-text" style={{ marginBottom: 18 }}>
+            Matrice du meilleur modèle ({bestModel?.model || 'Logistic Regression'})
+          </p>
+          <ConfusionMatrix />
+        </div>
+      </div>
     </div>
   );
 }

@@ -35,3 +35,13 @@ export async function getModelsComparison() {
   const response = await api.get('/models-comparison');
   return response.data;
 }
+
+export async function getStatistics() {
+  const response = await api.get('/statistics');
+  return response.data;
+}
+
+export async function getMetrics() {
+  const response = await api.get('/metrics');
+  return response.data;
+}
