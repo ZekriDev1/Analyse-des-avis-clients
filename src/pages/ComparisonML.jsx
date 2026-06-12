@@ -33,6 +33,13 @@ function ComparisonML() {
       ? models.reduce((best, m) => (m.f1Score > best.f1Score ? m : best))
       : null;
 
+  // ALL HOOKS CALLED AT TOP-LEVEL
+  const [headerRef, headerVis] = useScrollReveal();
+  const [chartRef, chartVis] = useScrollReveal();
+  const [tableRef, tableVis] = useScrollReveal();
+  const [bestRef, bestVis] = useScrollReveal();
+  const [cmRef, cmVis] = useScrollReveal();
+
   if (loading) {
     return (
       <div className="page-card">
@@ -66,12 +73,6 @@ function ComparisonML() {
     };
     return labels[key] || key;
   };
-
-  const [headerRef, headerVis] = useScrollReveal();
-  const [chartRef, chartVis] = useScrollReveal();
-  const [tableRef, tableVis] = useScrollReveal();
-  const [bestRef, bestVis] = useScrollReveal();
-  const [cmRef, cmVis] = useScrollReveal();
 
   return (
     <div style={{ maxWidth: 900, margin: '0 auto' }}>

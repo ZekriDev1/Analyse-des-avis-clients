@@ -38,7 +38,7 @@ export default function ModelComparisonChart({ models }) {
 
   return (
     <div style={{ width: '100%', height: 320 }}>
-      <ResponsiveContainer>
+      <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
         <BarChart data={chartData} barSize={18} barGap={4}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis
