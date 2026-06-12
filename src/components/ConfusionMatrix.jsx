@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getMetrics } from '../services/api';
 
 function getColor(value, max) {
@@ -11,19 +11,52 @@ function getColor(value, max) {
 
 export default function ConfusionMatrix() {
   const [metrics, setMetrics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    getMetrics().then(setMetrics).catch(() => {});
+    getMetrics()
+      .then((data) => {
+        setMetrics(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Impossible de récupérer les données de la matrice.');
+        setLoading(false);
+      });
   }, []);
 
-  if (!metrics || !metrics.confusion_matrix) return null;
+  if (loading) {
+    return (
+      <div className="py-6 text-sm text-gray-500 flex items-center gap-2">
+        <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
+        Chargement...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="border border-red-200 rounded-xl bg-red-50 px-5 py-4 my-2">
+        <p className="text-sm text-red-700 m-0">{error}</p>
+      </div>
+    );
+  }
+
+  if (!metrics || !metrics.confusion_matrix || !Array.isArray(metrics.confusion_matrix)) {
+    return (
+      <div className="py-6 text-sm text-gray-500">
+        Aucune donnée disponible.
+      </div>
+    );
+  }
 
   const cm = metrics.confusion_matrix;
   const maxVal = Math.max(...cm.flat());
 
   const rows = [
-    { label: 'Réel Positif', values: cm[0] },
-    { label: 'Réel Négatif', values: cm[1] },
+    { label: 'Réel Positif', values: cm[0] || [0, 0] },
+    { label: 'Réel Négatif', values: cm[1] || [0, 0] },
   ];
 
   const cols = ['Prédit Positif', 'Prédit Négatif'];
@@ -41,7 +74,6 @@ export default function ConfusionMatrix() {
           overflow: 'hidden',
         }}
       >
-        {/* Corner */}
         <div
           style={{
             background: '#f9fafb',
@@ -57,7 +89,6 @@ export default function ConfusionMatrix() {
           Réel \ Prédit
         </div>
 
-        {/* Column headers */}
         {cols.map((col) => (
           <div
             key={col}
@@ -74,9 +105,8 @@ export default function ConfusionMatrix() {
           </div>
         ))}
 
-        {/* Rows */}
         {rows.map((row, rIdx) => (
-          <>
+          <React.Fragment key={rIdx}>
             <div
               style={{
                 background: '#f9fafb',
@@ -118,7 +148,7 @@ export default function ConfusionMatrix() {
                 </div>
               );
             })}
-          </>
+          </React.Fragment>
         ))}
       </div>
 
