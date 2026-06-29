@@ -6,12 +6,9 @@ dist/
 __pycache__/
 *.db
 *.pkl
-<<<<<<< HEAD
 eda_*.json
 models_comparison.json
 metrics.json
 statistics.json
 .env
-/Skill/SKILL.md
-=======
->>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
+Files/

@@ -1,7 +1,0 @@
-{
-  "totalReviews": 50000,
-  "positiveReviews": 25000,
-  "negativeReviews": 25000,
-  "trainSamples": 40000,
-  "testSamples": 10000
-}
