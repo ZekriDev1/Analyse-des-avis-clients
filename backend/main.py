@@ -1,6 +1,9 @@
 import json
+<<<<<<< HEAD
 import logging
 import time
+=======
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
 from pathlib import Path
 
 import joblib
@@ -9,6 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from database import delete_history_item, fetch_history, init_db, insert_prediction
+<<<<<<< HEAD
 from eda import (
     get_frequent_words,
     get_review_length_stats,
@@ -22,6 +26,11 @@ from utils import clean_text
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 logger = logging.getLogger(__name__)
 
+=======
+from model_comparison import evaluate_models
+from utils import clean_text
+
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
 BASE_DIR = Path(__file__).resolve().parent
 MODEL_PATH = BASE_DIR / 'model.pkl'
 VECTORIZER_PATH = BASE_DIR / 'vectorizer.pkl'
@@ -45,6 +54,7 @@ app.add_middleware(
 
 init_db()
 
+<<<<<<< HEAD
 logger.info('Loading model and vectorizer...')
 try:
     model = joblib.load(MODEL_PATH)
@@ -66,6 +76,21 @@ with open(STATISTICS_PATH, 'r', encoding='utf-8') as f:
 logger.info('Preloading EDA data...')
 preload_all()
 logger.info('EDA data preloaded successfully')
+=======
+try:
+    model = joblib.load(MODEL_PATH)
+    vectorizer = joblib.load(VECTORIZER_PATH)
+except FileNotFoundError as error:
+    raise RuntimeError(
+        'Le modèle ou le vectorizer n’a pas été trouvé. Exécutez backend/model_train.py avant de démarrer le serveur.'
+    ) from error
+
+with open(METRICS_PATH, 'r', encoding='utf-8') as metrics_file:
+    metrics = json.load(metrics_file)
+
+with open(STATISTICS_PATH, 'r', encoding='utf-8') as statistics_file:
+    statistics = json.load(statistics_file)
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
 
 
 class ReviewRequest(BaseModel):
@@ -74,6 +99,7 @@ class ReviewRequest(BaseModel):
 
 @app.get('/api/statistics')
 async def get_statistics():
+<<<<<<< HEAD
     dist = get_sentiment_distribution()
     if not dist:
         raise HTTPException(status_code=503, detail='Les données ne sont pas encore disponibles.')
@@ -88,6 +114,9 @@ async def get_statistics():
         'trainSamples': statistics.get('trainSamples', 0),
         'testSamples': statistics.get('testSamples', 0),
     }
+=======
+    return statistics
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
 
 
 @app.get('/api/metrics')
@@ -101,7 +130,11 @@ async def get_models_comparison():
         with open(MODEL_COMPARISON_PATH, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
+<<<<<<< HEAD
         raise HTTPException(status_code=503, detail='La comparaison des modèles n\'est pas disponible.')
+=======
+        raise HTTPException(status_code=503, detail="La comparaison des modèles n'est pas disponible. Exécutez d'abord l'entraînement.")
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
 
 
 @app.get('/api/history')
@@ -120,14 +153,20 @@ async def delete_history(item_id: int):
 @app.post('/api/predict')
 async def predict(request: ReviewRequest):
     if not request.review.strip():
+<<<<<<< HEAD
         raise HTTPException(status_code=400, detail='Le texte de l\'avis est requis.')
 
     start = time.time()
+=======
+        raise HTTPException(status_code=400, detail='Le texte de l’avis est requis.')
+
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
     review_clean = clean_text(request.review)
     review_vector = vectorizer.transform([review_clean])
     probabilities = model.predict_proba(review_vector)[0]
     prediction = model.predict(review_vector)[0]
     confidence = float(max(probabilities)) * 100
+<<<<<<< HEAD
     elapsed = time.time() - start
     logger.info(f'Prediction completed in {elapsed:.3f}s - sentiment={prediction} confidence={confidence:.1f}%')
 
@@ -178,3 +217,14 @@ async def api_wordcloud_negative():
     if not img:
         raise HTTPException(status_code=503, detail='Les données ne sont pas encore disponibles.')
     return {'image': img}
+=======
+    sentiment = prediction
+
+    record = insert_prediction(request.review, sentiment, confidence)
+    return {
+        'review': request.review,
+        'sentiment': sentiment,
+        'confidence': round(confidence, 1),
+        'created_at': record['created_at'],
+    }
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2

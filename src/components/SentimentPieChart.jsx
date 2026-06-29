@@ -18,8 +18,13 @@ export default function SentimentPieChart() {
   if (!stats) return null;
 
   const data = [
+<<<<<<< HEAD
     { name: 'Positive', value: stats.positiveReviews || 0, color: COLORS.positive },
     { name: 'Negative', value: stats.negativeReviews || 0, color: COLORS.negative },
+=======
+    { name: 'Positif', value: stats.positiveReviews || 0, color: COLORS.positive },
+    { name: 'Négatif', value: stats.negativeReviews || 0, color: COLORS.negative },
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
   ];
 
   const total = data.reduce((s, d) => s + d.value, 0);

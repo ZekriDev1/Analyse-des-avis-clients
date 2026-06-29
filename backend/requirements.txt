@@ -5,5 +5,8 @@ numpy
 scikit-learn
 joblib
 python-multipart
+<<<<<<< HEAD
 matplotlib
 wordcloud
+=======
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2

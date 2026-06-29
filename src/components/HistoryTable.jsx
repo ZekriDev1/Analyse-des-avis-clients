@@ -8,7 +8,11 @@ const sentimentColors = {
 
 function HistoryTable({ records }) {
   if (!records.length) {
+<<<<<<< HEAD
     return <p className="history-empty">No history available.</p>;
+=======
+    return <p className="history-empty">Aucun historique disponible.</p>;
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
   }
 
   return (
@@ -16,15 +20,25 @@ function HistoryTable({ records }) {
       <table className="history-table">
         <thead>
           <tr>
+<<<<<<< HEAD
             <th>Review</th>
             <th>Sentiment</th>
             <th>Confidence</th>
+=======
+            <th>Avis</th>
+            <th>Sentiment</th>
+            <th>Confiance</th>
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
             <th>Date</th>
           </tr>
         </thead>
         <tbody>
           {records.map((item, index) => {
+<<<<<<< HEAD
             const sentKey = String(item.sentiment || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+=======
+            const sentKey = String(item.sentiment || '').toLowerCase();
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
             const color = sentimentColors[sentKey] || '#6b7280';
             const conf = Number(item.confidence) || 0;
             let barColor = '#fbbf24';

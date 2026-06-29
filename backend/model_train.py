@@ -62,8 +62,11 @@ def train() -> None:
         'confusion_matrix': confusion_matrix(y_test, y_pred).tolist(),
     }
 
+<<<<<<< HEAD
     class_report = classification_report(y_test, y_pred, output_dict=True)
 
+=======
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
     statistics = {
         'totalReviews': int(df.shape[0]),
         'positiveReviews': int((df['sentiment'] == 'positive').sum()),

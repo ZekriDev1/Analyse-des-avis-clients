@@ -1,4 +1,5 @@
 import { useState } from 'react';
+<<<<<<< HEAD
 import { predictReview } from '../services/api.js';
 import Result from './Result.jsx';
 
@@ -47,6 +48,11 @@ function saveHistory(records) {
   localStorage.setItem(HISTORY_KEY, JSON.stringify(records.slice(0, 50)));
 }
 
+=======
+import { predictReview, saveReviewHistory } from '../services/api.js';
+import Result from './Result.jsx';
+
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
 function ReviewForm() {
   const [review, setReview] = useState('');
   const [result, setResult] = useState(null);
@@ -56,7 +62,11 @@ function ReviewForm() {
   async function handleSubmit(event) {
     event.preventDefault();
     if (!review.trim()) {
+<<<<<<< HEAD
       setError('Please enter a customer review.');
+=======
+      setError('Veuillez saisir un avis client.');
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
       return;
     }
 
@@ -68,11 +78,16 @@ function ReviewForm() {
       const rawConfidence = Number(data.confidence ?? data.confidence_score ?? 0);
       const confidence = rawConfidence <= 1 ? Math.round(rawConfidence * 100) : Math.round(rawConfidence);
 
+<<<<<<< HEAD
       const entry = {
+=======
+      const historyEntry = {
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
         review: review.trim(),
         sentiment: data.sentiment,
         confidence,
         date: new Date().toLocaleString('fr-FR', {
+<<<<<<< HEAD
           year: 'numeric', month: '2-digit', day: '2-digit',
           hour: '2-digit', minute: '2-digit'
         })
@@ -84,6 +99,20 @@ function ReviewForm() {
       setResult(entry);
     } catch (err) {
       setError('Unable to reach the server.');
+=======
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
+      };
+
+      saveReviewHistory(historyEntry);
+      setResult(historyEntry);
+    } catch (err) {
+      setError('Impossible de contacter le serveur.');
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
     } finally {
       setIsSubmitting(false);
     }
@@ -93,6 +122,7 @@ function ReviewForm() {
     <div className="page-card">
       <form onSubmit={handleSubmit}>
         <label className="section-title" htmlFor="review-text">
+<<<<<<< HEAD
           Customer Review
         </label>
 
@@ -139,13 +169,25 @@ function ReviewForm() {
           id="review-text"
           className="textarea-field"
           placeholder="Write a customer review..."
+=======
+          Avis client
+        </label>
+        <textarea
+          id="review-text"
+          className="textarea-field"
+          placeholder="Écrire un avis client..."
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
           value={review}
           onChange={(event) => setReview(event.target.value)}
         />
         {error && <p className="page-text" style={{ color: '#b91c1c' }}>{error}</p>}
         <div className="form-row">
           <button type="submit" className="button-primary" disabled={isSubmitting}>
+<<<<<<< HEAD
             {isSubmitting ? 'Analyzing...' : 'Analyze'}
+=======
+            {isSubmitting ? 'Analyse en cours...' : 'Analyser'}
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
           </button>
         </div>
       </form>
@@ -155,4 +197,8 @@ function ReviewForm() {
   );
 }
 
+<<<<<<< HEAD
 export default ReviewForm;
+=======
+export default ReviewForm;
+>>>>>>> 132fdfbe031f201d1e2e251791f4f2ed53a639e2
