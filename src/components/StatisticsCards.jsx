@@ -46,9 +46,9 @@ export default function StatisticsCards() {
   if (!stats) return null;
 
   const items = [
-    { key: 'totalReviews', label: 'Total Avis', color: colors.total },
-    { key: 'positiveReviews', label: 'Positifs', color: colors.positive },
-    { key: 'negativeReviews', label: 'Négatifs', color: colors.negative },
+    { key: 'totalReviews', label: 'Total Reviews', color: colors.total },
+    { key: 'positiveReviews', label: 'Positive', color: colors.positive },
+    { key: 'negativeReviews', label: 'Negative', color: colors.negative },
   ];
 
   const accuracy = metrics ? metrics.accuracy : null;
@@ -64,7 +64,7 @@ export default function StatisticsCards() {
         </div>
       ))}
       <div style={cardStyle}>
-        <p style={labelStyle}>Précision Modèle</p>
+        <p style={labelStyle}>Model Accuracy</p>
         <p style={{ ...valueStyle, color: colors.accuracy }}>
           {accuracy != null ? `${accuracy}%` : '—'}
         </p>

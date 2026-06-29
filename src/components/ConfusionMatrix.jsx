@@ -21,7 +21,7 @@ export default function ConfusionMatrix() {
         setLoading(false);
       })
       .catch(() => {
-        setError('Impossible de récupérer les données de la matrice.');
+        setError('Unable to retrieve matrix data.');
         setLoading(false);
       });
   }, []);
@@ -30,7 +30,7 @@ export default function ConfusionMatrix() {
     return (
       <div className="py-6 text-sm text-gray-500 flex items-center gap-2">
         <div className="w-4 h-4 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
-        Chargement...
+        Loading...
       </div>
     );
   }
@@ -46,7 +46,7 @@ export default function ConfusionMatrix() {
   if (!metrics || !metrics.confusion_matrix || !Array.isArray(metrics.confusion_matrix)) {
     return (
       <div className="py-6 text-sm text-gray-500">
-        Aucune donnée disponible.
+        No data available.
       </div>
     );
   }
@@ -55,11 +55,11 @@ export default function ConfusionMatrix() {
   const maxVal = Math.max(...cm.flat());
 
   const rows = [
-    { label: 'Réel Positif', values: cm[0] || [0, 0] },
-    { label: 'Réel Négatif', values: cm[1] || [0, 0] },
+    { label: 'Actual Positive', values: cm[0] || [0, 0] },
+    { label: 'Actual Negative', values: cm[1] || [0, 0] },
   ];
 
-  const cols = ['Prédit Positif', 'Prédit Négatif'];
+  const cols = ['Predicted Positive', 'Predicted Negative'];
 
   return (
     <div>
@@ -86,7 +86,7 @@ export default function ConfusionMatrix() {
             justifyContent: 'center',
           }}
         >
-          Réel \ Prédit
+          Actual \ Predicted
         </div>
 
         {cols.map((col) => (
@@ -143,7 +143,7 @@ export default function ConfusionMatrix() {
                       opacity: val > maxVal * 0.5 ? 0.85 : 0.6,
                     }}
                   >
-                    {isCorrect ? '✓ Correct' : '✗ Erreur'}
+                    {isCorrect ? '✓ Correct' : '✗ Error'}
                   </div>
                 </div>
               );
@@ -164,14 +164,13 @@ export default function ConfusionMatrix() {
           lineHeight: 1.6,
         }}
       >
-        <strong style={{ color: '#111827' }}>Interprétation&nbsp;:</strong>
+        <strong style={{ color: '#111827' }}>Interpretation:</strong>
         <br />
-        Les cellules de la diagonale (<strong>✓ Correct</strong>) représentent les
-        prédictions correctes&nbsp;: les vrais positifs (en haut à gauche) et les
-        vrais négatifs (en bas à droite). Les autres cellules (<strong>✗ Erreur</strong>)
-        correspondent aux erreurs&nbsp;: faux positifs (en haut à droite) et faux
-        négatifs (en bas à gauche). Plus la couleur est foncée, plus le nombre
-        d'échantillons est élevé.
+        The diagonal cells (<strong>✓ Correct</strong>) represent correct
+        predictions: true positives (top left) and true negatives (bottom right).
+        The other cells (<strong>✗ Error</strong>) correspond to errors:
+        false positives (top right) and false negatives (bottom left).
+        The darker the color, the higher the number of samples.
       </div>
     </div>
   );

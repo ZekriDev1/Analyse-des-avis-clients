@@ -3,9 +3,9 @@ import ReviewForm from '../components/ReviewForm.jsx';
 function Analysis() {
   return (
     <div>
-      <h1 className="page-title">Analyse d'un avis</h1>
+        <h1 className="page-title">Review Analysis</h1>
       <p className="page-text">
-        Saisissez un avis client et obtenez immédiatement le sentiment ainsi que la confiance.
+        Enter a customer review and instantly get the sentiment and confidence level.
       </p>
       <div className="card-actions">
         <ReviewForm />

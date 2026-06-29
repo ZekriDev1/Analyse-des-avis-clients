@@ -21,12 +21,12 @@ export default function SentimentTrendChart({ records }) {
       const parts = r.date.split(' ');
       dateKey = parts[0] || r.date;
     } else {
-      dateKey = 'Inconnu';
+      dateKey = 'Unknown';
     }
     if (!grouped[dateKey]) {
       grouped[dateKey] = { date: dateKey, positif: 0, negatif: 0, total: 0 };
     }
-    const sent = String(r.sentiment || '').toLowerCase();
+    const sent = String(r.sentiment || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     if (sent.includes('posit') || sent.includes('posi')) {
       grouped[dateKey].positif += 1;
     } else if (sent.includes('negat') || sent.includes('nega')) {
@@ -37,8 +37,8 @@ export default function SentimentTrendChart({ records }) {
 
   const chartData = Object.values(grouped).map((d) => ({
     date: d.date,
-    Positifs: d.positif,
-    Négatifs: d.negatif,
+    Positive: d.positif,
+    Negative: d.negatif,
   }));
 
   if (chartData.length === 0) return null;
@@ -77,7 +77,7 @@ export default function SentimentTrendChart({ records }) {
           />
           <Line
             type="monotone"
-            dataKey="Positifs"
+            dataKey="Positive"
             stroke="#22c55e"
             strokeWidth={2}
             dot={{ r: 3, fill: '#22c55e' }}
@@ -85,7 +85,7 @@ export default function SentimentTrendChart({ records }) {
           />
           <Line
             type="monotone"
-            dataKey="Négatifs"
+            dataKey="Negative"
             stroke="#ef4444"
             strokeWidth={2}
             dot={{ r: 3, fill: '#ef4444' }}
