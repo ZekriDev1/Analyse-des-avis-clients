@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent
 CACHE = {}
 
 def _load(key, filename):
-    if key not in CACHE:
+    if key not in CACHE or CACHE.get(key) is None:
         path = BASE_DIR / filename
         if path.exists():
             with open(path, 'r', encoding='utf-8') as f:

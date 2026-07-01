@@ -25,6 +25,7 @@ def evaluate_models(reviews, labels):
         ('SVM', LinearSVC(max_iter=2000)),
     ]
 
+
     comparison = []
     for name, model in models:
         model.fit(X_train_tfidf, y_train)
